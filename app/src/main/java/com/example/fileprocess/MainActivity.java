@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     FileOutputStream fileOutputStream=openFileOutput("memo.txt", MODE_PRIVATE);
                     str="안녕하세요. 어서오세요~~~";
                     fileOutputStream.write(str.getBytes());
+                    fileOutputStream.close();
                     //파일을 열고 반드시 닫아줘야함.
                     fileOutputStream.close();
                     showToast("memo.txt 파일이 저장되었습니다.");
@@ -47,7 +49,16 @@ public class MainActivity extends AppCompatActivity {
         btnRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                try {
+                    FileInputStream fileInputStream=openFileInput("memo.txt");
+                    byte txt[]=new byte[fileInputStream.available()];
+                    fileInputStream .read(txt);
+                    String str=new String(txt);
+                    tvContent.setText(str);
+
+                } catch (IOException e) {
+                    showToast("파일을 읽을 수 없습니다.");
+                }
             }
         });
     }
